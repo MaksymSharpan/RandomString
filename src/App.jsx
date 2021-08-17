@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import './App.scss';
+import './App.css';
 import generator from 'generate-password';
 
 function App() {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [isPalindrome, setIsPalindrome] = useState(false);
+
+  const inNumbers = state => {
+    let newArr = [...state.split('')];
+    const fakeArr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
+    newArr.forEach(el => {
+      if (fakeArr.includes(el)) return;
+    });
+  };
 
   const generatePassword = () => {
     const pwd = generator.generate({
@@ -12,13 +21,19 @@ function App() {
       numbers: true,
     });
     const newPwd = pwd.split('');
-
-    // let user = users.find(item => item.id == 1);
-
     const isMatch = newPwd.includes('0');
-
     if (isMatch) {
-      setError(isMatch);
+      console.log('Тут был 0, но мы его не показываем');
+    }
+    if (newPwd.reverse().join('')) {
+      setIsPalindrome('palindrom');
+      if (!isPalindrome) {
+        console.log('not a palindrom');
+      }
+    }
+
+    if (!inNumbers(password)) {
+      console.log('has a letter');
     }
 
     setPassword(newPwd);
@@ -27,18 +42,12 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       generatePassword();
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div>
-      <div className="app">
-        {password ? <p>{password}</p> : <p>{` Пароль содержит 0 :${error}`}</p>}
-      </div>
-    </div>
-  );
+  return <div>{password}</div>;
 }
 
 export default App;
